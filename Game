@@ -1,0 +1,97 @@
+import java.util.Scanner;
+
+public class Game {
+    Scanner scanner = new Scanner(System.in);
+    boolean player_turn = true;  //true = Player 1, false = Player 2
+    Square[][] squares = new Square[3][3];
+    int x, y;
+    int player_number = 1;
+    char row, column;
+
+    int turn_number = 1;
+
+    public Game(){
+        for(int i = 0; i < 3; i++){
+            for (int j = 0; j < 3; j++){
+                squares[i][j] = new Square();
+            }
+        }
+    }
+
+    public void run(){
+        update();
+        main();
+    }
+
+    public void main(){
+        if(turn_number > 9){
+            System.out.println("Tie!");
+        }
+        System.out.print("Choose a square (Player " + player_number + "): ");
+        String entry = scanner.next();
+        entry = entry.toUpperCase();
+        row = entry.charAt(0);
+        column = entry.charAt(1);
+        x = column - '0' - 1;
+        if(x < 0 || x > 2 || row > 'C' || row < 'A'){
+            System.out.println("Invalid input.  Try again: ");
+            main();
+        }
+        switch (row){
+            case 'A':
+                y = 0;
+                break;
+            case 'B':
+                y = 1;
+                break;
+            case 'C':
+                y = 2;
+                break;
+        }
+        //If player_turn is true, then it is player 1's turn
+        if(player_turn){
+            squares[y][x].status = "X";
+        }
+        else{
+            squares[y][x].status = "O";
+        }
+        update();
+        if(checkWin()){
+            System.out.println("Player " + player_number + " Wins!");
+            System.exit(0);
+        }
+        player_turn = !player_turn;
+        player_number = (player_number == 1)? 2 : 1;
+        turn_number++;
+        main();
+    }
+
+    public boolean checkWin(){
+        int i;
+        for(i = 0; i < 3; i++){
+            if (squares[i][0].status != " " && squares[i][0].status == squares[i][1].status && squares[i][1].status == squares[i][2].status) {
+                return true;
+            }
+            if (squares[0][i].status != " " && squares[0][i].status == squares[1][i].status && squares[1][i].status == squares[2][i].status) {
+                return true;
+            }
+        }
+        if(squares[2][2].status != " " && squares[2][2].status == squares[1][1].status && squares[1][1].status == squares[0][0].status){
+            return true;
+        }
+        if(squares[2][0].status != " " && squares[2][0].status == squares[1][1].status && squares[1][1].status == squares[0][2].status){
+            return true;
+        }
+        return false;
+    }
+
+    public void update(){
+        System.out.print("\n\n\n\n");
+        System.out.println("\t 1   2   3");
+        System.out.println("A]\t " + squares[0][0].status + " | " + squares[0][1].status + " | " + squares[0][2].status);
+        System.out.println("\t---|---|---");
+        System.out.println("B]\t " + squares[1][0].status + " | " + squares[1][1].status + " | " + squares[1][2].status);
+        System.out.println("\t---|---|---");
+        System.out.println("C]\t " + squares[2][0].status + " | " + squares[2][1].status + " | " + squares[2][2].status);
+    }
+}
