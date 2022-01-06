@@ -26,6 +26,7 @@ public class Game {
     public void main(){
         if(turn_number > 9){
             System.out.println("Tie!");
+            System.exit(0);
         }
         System.out.print("Choose a square (Player " + player_number + "): ");
         String entry = scanner.next();
